@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Callable, Self
+from typing import Callable, Optional, Self
 
 
 class Coin(Enum):
@@ -9,25 +9,43 @@ class Coin(Enum):
     QUATER = 25
 
 
+class Product(Enum):
+    COLA = 100
+    CHIPS = 50
+    CANDY = 65
+
+
 class VendingMachine:
-    amount: int
-    display: Callable[[str], None]
+    __amount: int
+    __display: Callable[[str], None]
 
     def __init__(self, amount: int, display: Callable[[str], None]):
-        self.amount = amount
-        self.display = display
-        self.display("INSERT COIN")
+        self.__amount = amount
+        self.__display = display
+        self.__display("INSERT COIN")
 
     def insert_coin(self, coin: Coin) -> Self:
-        new_amount = self.amount + coin.value
+        new_amount = self.__amount + coin.value
 
-        self.display("Total: " + str(new_amount))
+        self.__display("Total: " + str(new_amount))
 
-        copy_instance = self.__class__(new_amount, self.display)
-        return copy_instance
+        return self.__copy(new_amount)
 
     def current_amount(self) -> int:
-        return self.amount
+        return self.__amount
+
+    def select(self, product: Product) -> tuple[Self, Optional[Product]]:
+        if product.value <= self.__amount:
+            self.__display("THANK YOU")
+            self.__display("")
+            return (self.__copy(0), product)
+        else:
+            self.__display("PRICE " + str(product.value))
+            self.__display(str(self.__amount))
+            return (self, None)
+
+    def __copy(self, amount: int):
+        return self.__class__(amount, self.__display)
 
     @staticmethod
     def newInstance(
