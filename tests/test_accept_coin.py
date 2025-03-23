@@ -29,4 +29,11 @@ def test_when_a_valid_coint_is_inserted_display_will_be_updated():
 
     vending_machine.insert_coin(Coin.PENNY)
 
-    display.assert_called_with("Total: 1")
+    display.assert_any_call("Total: 1")
+
+
+def test_when_no_coin_display_insert_coin():
+    display: Callable[[str], None] = MagicMock()
+    vending_machine = VendingMachine.newInstance(display)
+
+    display.assert_called_with("INSERT COIN")

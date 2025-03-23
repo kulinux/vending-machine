@@ -1,6 +1,5 @@
 from enum import Enum
 from typing import Callable, Self
-from dataclasses import dataclass
 
 
 class Coin(Enum):
@@ -17,6 +16,7 @@ class VendingMachine:
     def __init__(self, amount: int, display: Callable[[str], None]):
         self.amount = amount
         self.display = display
+        self.display("INSERT COIN")
 
     def insert_coin(self, coin: Coin) -> Self:
         new_amount = self.amount + coin.value
